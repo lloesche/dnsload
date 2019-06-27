@@ -19,7 +19,6 @@ start = time.time()
 
 def main() -> None:
     args = get_args()
-
     if args.duration:
         log.info('Testing DNS resolution for at least {} seconds with {} concurrent lookups'.format(args.duration, args.max))
         stop = start + args.duration
@@ -28,6 +27,7 @@ def main() -> None:
             if not bench(args.max, args.domain, args.raw, args.ns):
                 sys.exit(1)
             loops += 1
+            time.sleep(args.wait)
         elapsed = time.time() - start
         log.info('DNS resolution happened {} times with {} concurrent lookups each in {:.2f} seconds'.format(loops, args.max, elapsed))
     else:
@@ -35,6 +35,7 @@ def main() -> None:
         for num_threads in range(args.step, args.max + 1, args.step):
             if not bench(num_threads, args.domain, args.raw, args.ns):
                 sys.exit(1)
+            time.sleep(args.wait)
         log.info('DNS resolution worked up to {} concurrent requests'.format(args.max))
 
 
@@ -116,6 +117,7 @@ def get_args() -> Namespace:
     g = p.add_mutually_exclusive_group(required=True)
     g.add_argument('--duration', help='For how long to load test', dest='duration', type=positive_int)
     g.add_argument('--step', help='Step size', dest='step', type=positive_int)
+    p.add_argument('--wait', help='Time to wait between lookup rounds', dest='wait', type=float, default=0.0)
     p.add_argument('--raw', help='Perform RAW DNS lookups, bypass system libraries', dest='raw', action='store_true', default=False)
     p.add_argument('--ns', help='Nameserver to query when doing RAW lookup (default: resolv.conf)', dest='ns', type=str, default=None)
     p.add_argument('--verbose', help='Verbose logging', dest='verbose', action='store_true', default=False)

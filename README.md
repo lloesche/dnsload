@@ -7,8 +7,8 @@ or a one-time measurement of ramping up (`--step`) concurrent lookups up to a ma
 ## Usage
 ```
 usage: dnsload [-h] --domain DOMAIN [--max MAX]
-               (--duration DURATION | --step STEP) [--raw] [--ns NS]
-               [--verbose]
+               (--duration DURATION | --step STEP) [--wait WAIT] [--raw]
+               [--ns NS] [--verbose]
 
 DNS Load
 
@@ -18,6 +18,7 @@ optional arguments:
   --max MAX            Max concurrent lookups (default: 100)
   --duration DURATION  For how long to load test
   --step STEP          Step size
+  --wait WAIT          Time to wait between lookup rounds
   --raw                Perform RAW DNS lookups, bypass system libraries
   --ns NS              Nameserver to query when doing RAW lookup (default:
                        resolv.conf)
